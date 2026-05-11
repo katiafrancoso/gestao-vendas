@@ -1,18 +1,16 @@
-// src/firebase.js
-// Substitua os valores abaixo pelas suas credenciais do Firebase
-// Veja o README.md para saber como obter essas informações
+
 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "COLE_AQUI",
-  authDomain: "COLE_AQUI",
-  projectId: "COLE_AQUI",
-  storageBucket: "COLE_AQUI",
-  messagingSenderId: "COLE_AQUI",
-  appId: "COLE_AQUI",
+  apiKey: "AIzaSyC-3VHp0QToZ-fe_cmM2rlrj6kKg0nT_hk",
+  authDomain: "app-vendas-c8418.firebaseapp.com",
+  projectId: "app-vendas-c8418",
+  storageBucket: "app-vendas-c8418.firebasestorage.app",
+  messagingSenderId: "819729171031",
+  appId: "1:819729171031:web:b9d70f14114706b969d912"
 };
 
 const app = initializeApp(firebaseConfig);
