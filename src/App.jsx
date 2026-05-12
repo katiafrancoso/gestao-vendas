@@ -27,7 +27,7 @@ function useIsMobile() {
 export default function App() {
   const [usuario, setUsuario] = useState(undefined);
   const [page, setPage] = useState("vendas");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [menuUsuario, setMenuUsuario] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -37,17 +37,8 @@ export default function App() {
     return unsub;
   }, []);
 
-  useEffect(() => {
-    if (!isMobile) setSidebarOpen(false);
-  }, [isMobile]);
-
   async function sair() {
     await signOut(auth);
-  }
-
-  function navegar(id) {
-    setPage(id);
-    setSidebarOpen(false);
   }
 
   if (usuario === undefined) {
@@ -62,54 +53,40 @@ export default function App() {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#F5F4F0", fontFamily: "'DM Sans', sans-serif" }}>
-      {/* OVERLAY — mobile */}
-      {isMobile && sidebarOpen && (
-        <div onClick={() => setSidebarOpen(false)} style={{
-          position: "fixed", inset: 0, background: "#0007", zIndex: 98,
-        }} />
-      )}
-
-      {/* SIDEBAR */}
-      <aside style={{
-        width: 220, background: "#1A1A2E", display: "flex", flexDirection: "column",
-        position: "fixed", top: 0, bottom: 0, zIndex: 99,
-        left: isMobile ? (sidebarOpen ? 0 : -220) : 0,
-        transition: "left 0.25s ease",
-        boxShadow: sidebarOpen || !isMobile ? "4px 0 24px #0003" : "none",
-      }}>
-        <div style={{ padding: "28px 24px 20px", borderBottom: "1px solid #ffffff10", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div>
+{/* SIDEBAR — desktop */}
+      {!isMobile && (
+        <aside style={{
+          width: 220, background: "#1A1A2E", display: "flex", flexDirection: "column",
+          position: "fixed", top: 0, bottom: 0, left: 0, zIndex: 99,
+          boxShadow: "4px 0 24px #0003",
+        }}>
+          <div style={{ padding: "28px 24px 20px", borderBottom: "1px solid #ffffff10" }}>
             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", color: "#6366F1", textTransform: "uppercase", marginBottom: 4 }}>Gestão</div>
             <div style={{ fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1.1 }}>Vendas<br /><span style={{ color: "#6366F1" }}>Pro</span></div>
           </div>
-          {isMobile && (
-            <button onClick={() => setSidebarOpen(false)} style={{
-              background: "none", border: "none", color: "#94A3B8", fontSize: 22, cursor: "pointer", padding: 4,
-            }}>✕</button>
-          )}
-        </div>
-        <nav style={{ flex: 1, padding: "16px 12px" }}>
-          {NAV.map(n => (
-            <button key={n.id} onClick={() => navegar(n.id)} style={{
-              display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "11px 14px",
-              background: page === n.id ? "#6366F1" : "transparent", border: "none", borderRadius: 10,
-              cursor: "pointer", color: page === n.id ? "#fff" : "#94A3B8",
-              fontWeight: page === n.id ? 700 : 500, fontSize: 14, marginBottom: 4,
-              transition: "all 0.15s", textAlign: "left",
-            }}>
-              <span style={{ fontSize: 18 }}>{n.icon}</span>{n.label}
-            </button>
-          ))}
-        </nav>
-        <div style={{ padding: "16px 12px", borderTop: "1px solid #ffffff10" }}>
-          <div style={{ fontSize: 11, color: "#475569", marginBottom: 8, paddingLeft: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{usuario.email}</div>
-          <button onClick={sair} style={{
-            display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "10px 14px",
-            background: "transparent", border: "1px solid #ffffff20", borderRadius: 10,
-            cursor: "pointer", color: "#94A3B8", fontSize: 13, fontWeight: 600,
-          }}>🚪 Sair</button>
-        </div>
-      </aside>
+          <nav style={{ flex: 1, padding: "16px 12px" }}>
+            {NAV.map(n => (
+              <button key={n.id} onClick={() => setPage(n.id)} style={{
+                display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "11px 14px",
+                background: page === n.id ? "#6366F1" : "transparent", border: "none", borderRadius: 10,
+                cursor: "pointer", color: page === n.id ? "#fff" : "#94A3B8",
+                fontWeight: page === n.id ? 700 : 500, fontSize: 14, marginBottom: 4,
+                transition: "all 0.15s", textAlign: "left",
+              }}>
+                <span style={{ fontSize: 18 }}>{n.icon}</span>{n.label}
+              </button>
+            ))}
+          </nav>
+          <div style={{ padding: "16px 12px", borderTop: "1px solid #ffffff10" }}>
+            <div style={{ fontSize: 11, color: "#475569", marginBottom: 8, paddingLeft: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{usuario.email}</div>
+            <button onClick={sair} style={{
+              display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "10px 14px",
+              background: "transparent", border: "1px solid #ffffff20", borderRadius: 10,
+              cursor: "pointer", color: "#94A3B8", fontSize: 13, fontWeight: 600,
+            }}>🚪 Sair</button>
+          </div>
+        </aside>
+      )}
 
       {/* TOPBAR — mobile */}
       {isMobile && (
@@ -118,18 +95,30 @@ export default function App() {
           padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center",
           zIndex: 97, boxShadow: "0 2px 12px #0003",
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <button onClick={() => setSidebarOpen(true)} style={{
-              background: "none", border: "none", color: "#fff", fontSize: 22, cursor: "pointer", padding: 4, lineHeight: 1,
-            }}>☰</button>
-            <div style={{ fontSize: 16, fontWeight: 800, color: "#fff" }}>
-              {NAV.find(n => n.id === page)?.icon} {NAV.find(n => n.id === page)?.label}
-            </div>
+          <div style={{ fontSize: 16, fontWeight: 800, color: "#fff" }}>
+            {NAV.find(n => n.id === page)?.icon} {NAV.find(n => n.id === page)?.label}
           </div>
-          <button onClick={sair} style={{
-            background: "transparent", border: "1px solid #ffffff20", borderRadius: 8,
-            padding: "6px 12px", color: "#94A3B8", fontSize: 12, fontWeight: 600, cursor: "pointer",
-          }}>🚪 Sair</button>
+          <div style={{ position: "relative" }}>
+            <button onClick={() => setMenuUsuario(m => !m)} style={{
+              background: "#6366F1", border: "none", borderRadius: "50%",
+              width: 34, height: 34, cursor: "pointer", fontSize: 16,
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>👤</button>
+            {menuUsuario && (
+              <div style={{
+                position: "absolute", right: 0, top: 42, background: "#fff",
+                borderRadius: 12, boxShadow: "0 8px 24px #0003", padding: "12px 16px",
+                minWidth: 200, zIndex: 200,
+              }}>
+                <div style={{ fontSize: 12, color: "#94A3B8", marginBottom: 10, wordBreak: "break-all" }}>{usuario.email}</div>
+                <button onClick={sair} style={{
+                  display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px",
+                  background: "#FEF2F2", border: "none", borderRadius: 8,
+                  cursor: "pointer", color: "#EF4444", fontSize: 13, fontWeight: 600,
+                }}>🚪 Sair</button>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -152,7 +141,7 @@ export default function App() {
           paddingBottom: "env(safe-area-inset-bottom)",
         }}>
           {NAV.map(n => (
-            <button key={n.id} onClick={() => navegar(n.id)} style={{
+            <button key={n.id} onClick={() => { setPage(n.id); setMenuUsuario(false); }} style={{
               flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
               gap: 3, padding: "10px 4px", background: "transparent", border: "none",
               cursor: "pointer", color: page === n.id ? "#6366F1" : "#64748B", transition: "color 0.15s",
@@ -166,4 +155,4 @@ export default function App() {
       )}
     </div>
   );
-}
+}      
