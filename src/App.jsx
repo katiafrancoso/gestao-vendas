@@ -52,18 +52,12 @@ export default function App() {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#F5F4F0", fontFamily: "'DM Sans', sans-serif" }}>
-
       {!isMobile && (
         <aside style={{
-          width: 220,
-          background: "#1A1A2E",
-          display: "flex",
-          flexDirection: "column",
-          position: "fixed",
-          top: 0, left: 0, bottom: 0,
-          zIndex: 100,
+          width: 220, background: "#1A1A2E", display: "flex", flexDirection: "column",
+          position: "fixed", top: 0, left: 0, bottom: 0, zIndex: 100,
           boxShadow: "4px 0 24px #0003",
         }}>
           <div style={{ padding: "28px 24px 20px", borderBottom: "1px solid #ffffff10" }}>
             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", color: "#6366F1", textTransform: "uppercase", marginBottom: 4 }}>Gestão</div>
-            <div style={{ fontSize: 22, fontWeight: 800,
+            <d
